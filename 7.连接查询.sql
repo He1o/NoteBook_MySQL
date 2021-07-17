@@ -32,7 +32,6 @@ use myemployees;
 */
 
 # 案例1：查询员工名和对应的部门名
-
 select last_name, department_name
 from employees, departments
 where employees.department_id = departments.department_id;
@@ -98,7 +97,7 @@ AND d.location_id = l.location_id
 AND city LIKE 's%';
 
 #2、 非等值连接
-#案例1:查询员工的工资和工资级别
+# 案例1:查询员工的工资和工资级别
 -- CREATE TABLE job_grades
 -- (grade_level VARCHAR(3),
 --  lowest_sal  int,
@@ -128,8 +127,7 @@ WHERE salary BETWEEN g.`lowest_sal` AND g.`highest_sal`
 AND g.`grade_level` = 'A';
 
 #3、 自连接
-
-#案例1:查询员工名和上级的名称
+# 案例1:查询员工名和上级的名称
 SELECT e.employee_id, e.last_name, m.employee_id, m.last_name
 FROM employees e, employees m
 WHERE e.`manager_id` = m.`employee_id`;
