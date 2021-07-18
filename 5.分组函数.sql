@@ -29,8 +29,8 @@ select sum(salary) 和,  avg(salary) 'avg', max(salary), min(salary), count(sala
 select sum(distinct salary), sum(salary) from employees;
 select count(distinct salary), count(salary) from employees;
 
-# 3、count函数的具体使用
+-- 3、count函数的具体使用
 select count(salary) from employees;
-select count(*) from employees;  #查询任何列中不为null的数量，只要一行中有一个不为null就统计下来
-select count(1) from employees;  #在列表中加上一列都为1，统计1的个数
-# 效率 count(*)>count(1)>count(字段)   一般用count(*)进行行数统计
+select count(*) from employees;  -- 查询任何列中不为null的数量，只要一行中有一个不为null就统计下来
+select count(1) from employees;  -- 在列表中加上一列都为1，统计1的个数
+-- 效率 count(*)>count(1)>count(字段)   一般用count(*)进行行数统计

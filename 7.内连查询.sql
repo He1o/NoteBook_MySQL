@@ -21,6 +21,7 @@
 
 use myemployees;
 
+# sql92
 # 一、内连接
 #1、 等值连接
 /*
@@ -128,6 +129,6 @@ AND g.`grade_level` = 'A';
 
 #3、 自连接
 # 案例1:查询员工名和上级的名称
-SELECT e.employee_id, e.last_name, m.employee_id, m.last_name
+SELECT e.employee_id as ei1, e.last_name as ln1, m.employee_id as ei2, m.last_name as ln2
 FROM employees e, employees m
-WHERE e.`manager_id` = m.`employee_id`;
+WHERE e.`manager_id` = m.`employee_id`; 

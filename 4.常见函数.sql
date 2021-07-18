@@ -104,10 +104,12 @@ select datediff('2021-7-11', '1994-11-19');
 
 # 四、其他函数
 select database();  #当前数据库
-
+select user(); #当前用户
+select version(); #当前版本
+select password('heao'); #加密
 
 # 五、流程控制函数
-# if函数  if else效果alter
+-- if函数  if else效果alter
 select if(10 < 5, '大', '小');
 select last_name, commission_pct, if (commission_pct is null, '没奖金', '有奖金')
 from employees;
