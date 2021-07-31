@@ -83,17 +83,140 @@ HAVING MIN(salary) > (
 -- 案例1:返回location_id是1400或1700的部门中的所有员工姓名
 SELECT last_name
 FROM employees
-WHERE department_id in (
+WHERE department_id IN(
     SELECT DISTINCT department_id
     FROM departments
     WHERE location_id IN(1400, 1700)
 );
 
--- 案例2:返回其他部门中比job_id为‘IT_PROG’部门任一工资低的员工的员工工号、姓名、jid以及salary
-SELECT employee_id, last_name, salary
+-- 等同于上面
+SELECT last_name
 FROM employees
-WHERE 
+WHERE department_id = ANY(
+    SELECT DISTINCT department_id
+    FROM departments
+    WHERE location_id IN(1400, 1700)
+);
+
+-- 案例2:返回其他工种中比job_id为‘IT_PROG’工种任一工资低的员工的员工工号、姓名、jid以及salary
+SELECT employee_id, last_name, salary, job_id
+FROM employees
+WHERE salary < ANY(
+    SELECT DISTINCT salary 
+    FROM employees
+    WHERE job_id = 'IT_PROG'
+) AND job_id <> 'IT_PROG';
+
+-- 案例3:查询姓名中包含字母u的员工在相同部门的员工的员工号和姓名
+SELECT last_name, employee_id
+FROM employees
+WHERE department_id IN(
+    SELECT DISTINCT department_id
+    FROM employees
+    WHERE last_name LIKE '%u%'
+);
+
+-- ANY与<MAX()相同
+SELECT employee_id, last_name, salary, job_id
+FROM employees
+WHERE salary < (
+    SELECT MAX(salary)
+    FROM employees
+    WHERE job_id = 'IT_PROG'
+) AND job_id <> 'IT_PROG';
+
+-- 案例3:返回其他工种中比job_id为‘IT_PROG’工种所有工资低的员工的员工工号、姓名、jid以及salary
+SELECT employee_id, last_name, salary, job_id
+FROM employees
+WHERE salary < ALL(
+    SELECT DISTINCT salary 
+    FROM employees
+    WHERE job_id = 'IT_PROG'
+) AND job_id <> 'IT_PROG';
+
+SELECT employee_id, last_name, salary, job_id
+FROM employees
+WHERE salary < (
+    SELECT MIN(salary)
+    FROM employees
+    WHERE job_id = 'IT_PROG'
+) AND job_id <> 'IT_PROG';
 
 -- 3、行子查询（多列多行）
+-- 案例1:查询员工编号最小而且工资最高的员工信息
+SELECT *
+FROM employees
+WHERE employee_id = (
+    SELECT MIN(employee_id)
+    FROM employees
+) AND salary = (
+    SELECT MAX(salary)
+    FROM employees
+);
 
+SELECT *
+FROM employees
+WHERE (employee_id, salary) = (
+    SELECT MIN(employee_id), MAX(salary)
+    FROM employee_id
+);
+
+
+-- 二、select后面
+-- 仅支持标量子查询
+
+-- 案例1:查询每个部门的员工个数
+SELECT d.*, (
+    SELECT COUNT(*)
+    FROM employees e
+    WHERE e.department_id = d.department_id
+)
+FROM departments d;
+
+
+-- 三、from后面
+-- 案例1:查询每个部门的平均工资的工资等级
+SELECT ag_dep.*, g.grade_level
+FROM (
+    SELECT AVG(salary) avg_salary, department_id
+    FROM employees
+    GROUP BY department_id
+) ag_dep
+INNER JOIN job_grades g
+ON ag_dep.avg_salary BETWEEN lowest_sal AND highest_sal;
+
+-- 案例2:查询各部门中工资比本部门平均工资高的员工的员工号，姓名和工资
+SELECT employee_id, last_name, salary, e.department_id
+FROM (
+    SELECT AVG(salary) a, department_id
+    FROM employees
+    GROUP BY department_id
+) avg_dep
+INNER JOIN employees e
+ON e.salary > a
+AND e.department_id = avg_dep.department_id ;
+
+-- 四、exists后面 相关子查询
+/*
+    语法：
+    exists（完整查询语句）
+    返回0或1判断是否存在
+*/
+
+-- 案例1:查询有员工的部门名
+SELECT department_name
+FROM departments d
+WHERE exists(
+    SELECT *
+    FROM employees e
+    WHERE d.department_id = e.department_id
+);
+
+SELECT department_name
+FROM departments d
+WHERE d.department_id IN(
+    SELECT department_id
+    FROM employees
+    GROUP BY department_id
+);
 
