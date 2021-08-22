@@ -84,7 +84,7 @@ ALTER Table author RENAME TO book_author;
 
 
 /*
-    2、表的删除
+    3、表的删除
 
 */
 
