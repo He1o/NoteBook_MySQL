@@ -112,7 +112,10 @@ WHERE grade_level = 'C';
           TRUNCATE删除后，插入数据，自增长列的值从头开始
         4.truncate删除没有发返回值
           delete有返回值，返回影响几行
-        5.truncate删除不能回滚，delete删除可以回滚
+        5.truncate是DDL语句，delete是DML语句，truncate删除不能回滚，delete删除可以回滚
+        6.当你不再需要该表时， 用 drop；
+          当你仍要保留该表，但要删除所有记录时， 用 truncate；
+          当你要删除部分记录时（always with a WHERE clause), 用 delete.
 
 */
 -- 方式1 delete
